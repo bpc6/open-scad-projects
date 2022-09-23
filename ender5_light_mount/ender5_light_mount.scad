@@ -23,22 +23,17 @@ module screw_hole(diam_top, depth_top, diam_bot, depth_bot) {
     cylinder(h=depth_bot + tol, r=diam_bot/2, center=true);
 }
 
-
-rotate([90, 0, 0])
+rotate([90, 0, 0]) 
 {
     mirror_copy([1, 0, 0])
     {
         difference()
         {
-        translate([plate_l/4, 0, 0])
-        cube([plate_l/2, plate_h, screw_len_top + screw_len_bot], center=true);
+            translate([plate_l/4, 0, 0])
+            cube([plate_l/2, plate_h, screw_len_top + screw_len_bot], center=true);
 
-        translate([dist_betw_holes/2, 0, 0])
-        screw_hole(screw_diam_top, screw_len_top, screw_diam_bot, screw_len_bot);
+            translate([dist_betw_holes/2, 0, 0])
+            screw_hole(screw_diam_top, screw_len_top, screw_diam_bot, screw_len_bot);
         }
     }
 }
-
-// cup
-cup_l = 20;
-
