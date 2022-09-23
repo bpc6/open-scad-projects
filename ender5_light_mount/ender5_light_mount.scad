@@ -51,10 +51,13 @@ rotate([90, 0, 0])
 light_depth = 6;
 light_diam = 10;
 light_clamp_diam = 8;
-side_l = 20 + plate_w;
+// side_l = 20 + plate_w;
 side_l = 20;
 
 module light_hole() {
+    /*
+    Round hole with flat sides to clamp the light.
+    */
     difference()
     {
         cylinder(h=light_depth, r=light_diam/2, center=true);
@@ -69,8 +72,8 @@ module light_hole() {
 
 }
 
+// make mount with hole
 translate([plate_l/2 + side_l/2 - tol, (side_l-plate_w)/2, (light_depth-plate_h)/2])
-
 difference()
 {
     union()
@@ -85,7 +88,6 @@ difference()
 
 // chamfer
 chamf = 7;
-
 translate([plate_l/2, 0, light_depth-plate_h/2])
 rotate([90, 45, 0])
 cube([chamf, chamf, plate_w], center=true);
