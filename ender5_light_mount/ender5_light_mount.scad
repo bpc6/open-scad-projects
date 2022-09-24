@@ -4,6 +4,7 @@ $fa = 1;
 $fs = 0.4;
 
 tol = 0.001;
+ptol = 0.3;
 
 // clip plate
 plate_l = 40;
@@ -41,7 +42,7 @@ rotate([90, 0, 0])
 
             // hole
             translate([dist_betw_holes/2, 0, 0])
-            screw_hole(screw_diam_top, screw_len_top, screw_diam_bot, screw_len_bot);
+            screw_hole(screw_diam_top+ptol, screw_len_top, screw_diam_bot+ptol, screw_len_bot);
         }
     }
 }
@@ -50,7 +51,7 @@ rotate([90, 0, 0])
 // light mount
 light_depth = 6;
 light_diam = 10;
-light_clamp_diam = 8;
+light_clamp_diam = 8 + ptol;
 // side_l = 20 + plate_w;
 side_l = 20;
 
@@ -83,7 +84,13 @@ difference()
         cube([side_l/2, side_l, light_depth - tol], center=true);
     }
 
-    light_hole();
+    union()
+    {
+        light_hole();
+        
+        translate([0, light_clamp_diam, 0])
+        cube([light_clamp_diam+tol, 2*light_clamp_diam, light_depth + tol], center=true);
+    }
 }
 
 // chamfer
