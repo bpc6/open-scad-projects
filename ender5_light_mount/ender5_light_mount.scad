@@ -9,7 +9,7 @@ ptol = 0.3;
 // clip plate
 plate_l = 40;
 plate_h = 20;
-screw_diam_top = 5;
+screw_diam_top = 5.5;
 screw_len_top = 3;
 screw_diam_bot = 3;
 screw_len_bot = 3;
@@ -20,10 +20,10 @@ module screw_hole(diam_top, depth_top, diam_bot, depth_bot) {
     /*
     Hole for mounting screws. Needs wide top and narrow bottom.
     */
-    translate([0, 0, depth_top/2])
+    translate([0, 0, depth_bot/2])
     cylinder(h=depth_top + tol, d=diam_top, center=true);
 
-    translate([0, 0, -depth_bot/2])
+    translate([0, 0, -depth_top/2])
     cylinder(h=depth_bot + tol, d=diam_bot, center=true);
 }
 
