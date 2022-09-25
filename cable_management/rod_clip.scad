@@ -2,12 +2,10 @@ include <BOSL2/std.scad>
 $fa = 1;
 $fs = 0.4;
 
-module rod_clip(rod_diam, width, anchor=CENTER, spin=0, orient=UP) {
+module rod_clip(rod_diam, width, thickness=2, slice_angle=230, anchor=CENTER, spin=0, orient=UP) {
     /*
         A clip that snaps firmly onto a metal rod.
     */
-    thickness = 2;
-    slice_angle = 230;
     rod_radius = rod_diam/2;
 
     attachable(anchor, spin, orient, r=rod_diam/2+thickness, l=width, axis=BACK) {
