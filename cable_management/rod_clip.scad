@@ -23,5 +23,9 @@ module rod_clip(rod_diam, width, thickness=2, slice_angle=230, anchor=CENTER, sp
     }
 }
 
-rod_clip(6.2, 5, anchor=BOTTOM)
-    attach(BOTTOM, TOP, overlap=1.5) cube([7, 5, 2]);
+d = [for (i = [7.5:.5:9.5]) i];
+echo(d=d);
+
+for (i = [0 : len(d) - 1])
+right(i * 16) rod_clip(d[i], 5, anchor=BOTTOM)
+    attach(BOTTOM, TOP, overlap=1.5) cube([d[i], 5, 2]);
