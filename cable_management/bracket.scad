@@ -10,13 +10,13 @@ tol = .001;
 Bracket for holding cable managment rails. Should be able to create bottom or top by using a negating dist_from_bot_to_top_rails.
 */
 module bracket(
-    width,
-    thickness,
     top_rail_radius,
     bot_rail_radius,
     bot_rail_pos,
     top_rail_pos,
-    overlap,
+    width = 6,
+    thickness = 5,
+    overlap = 2,
     clip_thickness = 2
 ) {
     top_z_sign = sign(top_rail_pos.z);
@@ -41,10 +41,12 @@ module bracket(
         top_link_pos = top_rail_pos - top_clip_orientation * (top_rail_radius + thickness/2 - overlap);
 
         difference() {
-            chain_hull() {
-                up(bot_link_pos.z) cube([.01, width, thickness], anchor=LEFT);
-                translate(bot_link_pos) ycyl(d=thickness, h=width);
-                translate(top_link_pos) ycyl(d=thickness, h=width);
+            union() {
+                up(bot_link_pos.z) cube([bot_link_pos.x, width, thickness], anchor=LEFT);
+                hull() {
+                    translate(bot_link_pos) ycyl(d=thickness, h=width);
+                    translate(top_link_pos) ycyl(d=thickness, h=width);
+                }
             }
             translate(bot_rail_pos) ycyl(h=width+tol, d=bot_rail_diam+2*clip_thickness);
             translate(top_rail_pos) ycyl(h=width+tol, d=top_rail_diam+2*clip_thickness);
@@ -53,7 +55,7 @@ module bracket(
 
     module clips() {
         translate(bot_rail_pos) rod_clip(bot_rail_radius*2, width, thickness=clip_thickness, orient=bot_clip_orientation);
-        translate(top_rail_pos) rod_clip(top_rail_radius*2, width, thickness=clip_thickness, orient=top_clip_orientation);
+        translate(top_rail_pos) rod_clip(top_rail_radius*2, width, thickness=clip_thickness, slice_angle=240, orient=top_clip_orientation);
     }
 
     mirror_copy() {
@@ -66,10 +68,10 @@ module bracket(
 
 // inputs to cable_management module
 top_rail_diam = 8;
-bot_rail_diam = 9.25;
-dist_betw_bot_rails = 60;
+bot_rail_diam = 16;//9.25;
+dist_betw_bot_rails = 40;
 dist_betw_top_rails = 90;
-dist_from_bot_to_top_rails = -30;
+dist_from_bot_to_top_rails = -15; // positive for underside, negative for topside
 
 radius_bot = bot_rail_diam/2;
 radius_top = top_rail_diam/2;
@@ -81,16 +83,14 @@ top_rail_pos = [dist_betw_top_rails/2 + radius_top, 0, dist_from_bot_to_top_rail
 
 
 // actually place stuff on the map
-mirror_copy()
-for (pos = [bot_rail_pos, top_rail_pos])
+*mirror_copy()
+    for (pos = [bot_rail_pos, top_rail_pos])
     translate(pos) color("yellow") ycyl(h=30, d=bot_rail_diam);
 
 bracket(
-    width = 8,
-    thickness = 6,
     bot_rail_radius=radius_bot,
     top_rail_radius=radius_top,
     bot_rail_pos=bot_rail_pos,
     top_rail_pos=top_rail_pos,
-    overlap=1.5
-);
+    overlap=2
+); 
