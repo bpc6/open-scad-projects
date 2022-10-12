@@ -12,7 +12,7 @@ module cable_management(
     bot_rail_diam = 16,
     dist_betw_bot_rails = 40,
     dist_betw_top_rails = 90,
-    dist_from_bot_to_top_rails = 20,
+    dist_from_bot_to_top_rails = 15,
     bracket_width = 6,
     num_brackets = 8,
     extra_rod_at_end=10

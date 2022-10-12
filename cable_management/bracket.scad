@@ -22,24 +22,20 @@ module bracket(
     top_z_sign = sign(top_rail_pos.z);
     top_rel_bottom = top_rail_pos - bot_rail_pos;
 
-    // rotation matrices
+    // clip rotation matrices
     rot_bot = [ BOT, CTR, RIGHT+top_z_sign*TOP ];
     rot_top = [ BOT, CTR, RIGHT ];
 
-    //orientations
+    // orientations
     bot_clip_orientation = normalize(rot_bot * top_rel_bottom);
     top_clip_orientation = normalize(rot_top * top_rel_bottom);
 
-    echo(bot_pos=bot_rail_pos);
-    echo(bot_orient=bot_clip_orientation);
-    echo(top_pos=top_rail_pos);
-    echo(top_orient=top_clip_orientation);
+    // linkage postitions
+    bot_link_pos = bot_rail_pos - bot_clip_orientation * (bot_rail_radius + thickness/2 - overlap);
+    top_link_pos = top_rail_pos - top_clip_orientation * (top_rail_radius + thickness/2 - overlap);
 
     // define the linkage to connect all the clips
     module linkage() {
-        bot_link_pos = bot_rail_pos - bot_clip_orientation * (bot_rail_radius + thickness/2 - overlap);
-        top_link_pos = top_rail_pos - top_clip_orientation * (top_rail_radius + thickness/2 - overlap);
-
         difference() {
             union() {
                 up(bot_link_pos.z) cube([bot_link_pos.x, width, thickness], anchor=LEFT);
@@ -58,20 +54,27 @@ module bracket(
         translate(top_rail_pos) rod_clip(top_rail_radius*2, width, thickness=clip_thickness, slice_angle=240, orient=top_clip_orientation);
     }
 
+    module desk_mount() {
+        arm_start_pos = [0, 0, bot_link_pos.z + thickness/2];
+        translate(arm_start_pos) cube(width, anchor=BOT);
+    }
+
+
     mirror_copy() {
         linkage();
         clips();
     }
+    desk_mount();
 }
 
 
 
 // inputs to cable_management module
 top_rail_diam = 8;
-bot_rail_diam = 16;//9.25;
+bot_rail_diam = 16;
 dist_betw_bot_rails = 40;
 dist_betw_top_rails = 90;
-dist_from_bot_to_top_rails = -15; // positive for underside, negative for topside
+dist_from_bot_to_top_rails = 15; // positive for underside, negative for topside
 
 radius_bot = bot_rail_diam/2;
 radius_top = top_rail_diam/2;
@@ -92,5 +95,5 @@ bracket(
     top_rail_radius=radius_top,
     bot_rail_pos=bot_rail_pos,
     top_rail_pos=top_rail_pos,
-    overlap=2
+    overlap=1
 ); 
