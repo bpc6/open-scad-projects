@@ -17,7 +17,12 @@ module bracket(
     width = 6,
     thickness = 5,
     overlap = 2,
-    clip_thickness = 2
+    clip_thickness = 2,
+    stem_width = 10,
+    stem_height = 110,
+    dist_to_hole = 15,
+    top_hole_diam = 6.8,
+    top_edge_to_hole = 6
 ) {
     top_z_sign = sign(top_rail_pos.z);
     top_rel_bottom = top_rail_pos - bot_rail_pos;
@@ -56,7 +61,15 @@ module bracket(
 
     module desk_mount() {
         arm_start_pos = [0, 0, bot_link_pos.z + thickness/2];
-        translate(arm_start_pos) cube(width, anchor=BOT);
+        global_top = stem_height + bot_link_pos.z + thickness/2;
+        hole_y = dist_to_hole + top_hole_diam/2;
+        top_plate_width = top_hole_diam + 2 * top_edge_to_hole;
+        top_plate_depth = hole_y + top_hole_diam/2 + top_edge_to_hole + width;
+        translate(arm_start_pos) cube([stem_width, width, stem_height], anchor=BOT);
+        difference() {
+            translate([0,-width/2,global_top]) cube([top_plate_width, top_plate_depth, thickness], anchor=TOP+FRONT);
+            translate([0,hole_y,global_top+tol/2]) cylinder(d=top_hole_diam, h=thickness+tol, anchor=TOP+FRONT);
+        }
     }
 
 
@@ -64,7 +77,7 @@ module bracket(
         linkage();
         clips();
     }
-    desk_mount();
+    if (top_rail_pos.z > bot_rail_pos.z) desk_mount();
 }
 
 

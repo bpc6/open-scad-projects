@@ -34,7 +34,7 @@ module cable_management(
     edge_y = (rail_len - bracket_width - extra_rod_at_end) / 2;
 
     // end brackets
-    for (dir = [-1, 1]) fwd(dir*edge_y) bracket(
+    for (dir = [-1, 1]) fwd(dir*edge_y) rotate(90*dir+90) bracket(
         bot_rail_radius=radius_bot,
         top_rail_radius=radius_top,
         bot_rail_pos=bot_rail_pos,
